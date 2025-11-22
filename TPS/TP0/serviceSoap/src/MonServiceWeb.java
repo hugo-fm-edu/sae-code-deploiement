@@ -21,4 +21,8 @@ public class MonServiceWeb {
     public double somme(@WebParam(name = "parametre1") double a, double b){
         return a+b;
     }
+
+    public Etudiant getEtudiant(int identifiant) {
+        return new Etudiant(1, "Mario", 19);
+    }
 }
