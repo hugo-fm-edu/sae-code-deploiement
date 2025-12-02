@@ -87,3 +87,4 @@ kubectl scale deployment nom --replicas=<int> #Scale un déploiement en indiquan
 kubectl expose deployment nom --type=NodePort --port <int> #Expose le déploiement sur le port spécifié
 kubectl delete service nom_deploiement #Supprimer un service minikube
 kubectl delete deployment nom #Supprimer un déploiement (et tous ses pods)
+kubectl apply -f nginx-deployment.yaml #Créer un déploiement depuis un fichier .yaml
