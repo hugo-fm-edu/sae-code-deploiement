@@ -1,0 +1,18 @@
+Sujet : Réalisation d'un Dockerfile pour affiché un message depuis un programme Java
+
+Il faut compiler le fichier java puis executé le fichier. Il nous faut donc JDK et JRE, qui vont chacun être une image dans notre Dockerfile.
+
+Etape 1 : Compilation
+    1- Récupération de l'image JDK "eclipse-temurin:21-jdk".
+       On a également un renommage ("build") pour réutiliser l'image plus tard dans le code
+    2- Création du dossier /app dans l'image et se place dedans
+    3- Copie du fichier .java dans le dossier /app
+    4- Compilation du programme Java avec javac
+
+Etape 2 : Création de l'image finale (avec le JRE)
+    1- Récupération de l'image JRE "eclipse-temurin:21-jre"
+    2- Création du dossier /app dans l'image et se place dedans
+    3- Copie du fichier compilé de l'image "build" dans son /app vers le dossier /app de la 2ème image
+    4- Execution du programme
+
+Une fois le Dockerfile terminé, on créer le conteneur via docker build et on teste l'application.
