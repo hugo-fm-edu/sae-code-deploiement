@@ -1,0 +1,89 @@
+Commande docker simple :
+docker images #listes les images locales
+docker ps #liste les conteneurs en cours
+docker ps -a #liste tout les conteneurs déjà créer.
+docker run #démarrer un conteneur
+docker rm #supprimer un conteneur
+docker image rm #supprimer une image
+docker stop #arrêter un conteneur
+docker exec -it conteneur sh #entrer dans le terminal du conteneur
+
+------------------------------------------------
+Exporter un conteneur
+
+docker export -o fichier.tar conteneur #Exporter un conteneur vers un fichier.tar 
+
+------------------------------------------------
+Créer un volume pour faire persister les données
+
+docker volume ls #voir la liste des volumes
+docker volume create #créer un volume pour la persistance des données (à monter via docker run -v volume:/path)
+docker exec #exécuter une commande dans un conteneur
+
+------------------------------------------------
+
+Persister une base de données MySQL avec Docker.
+
+1- Créer un volume pour la base de données.
+docker volume create mysql_data
+
+2- Créer un conteneur mysql avec le volume mysql_data et l'image mysql:8
+docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=pass -v mysql_data:/var/lib/mysql mysql:8
+
+3- Ajouter des données dans MySQL
+3.1- Se connecter à mysql
+docker exec -it mysql mysql -u root -p
+3.2- Création de la base de données et des données
+CREATE DATABASE test;
+USE test;
+CREATE TABLE users (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(50));
+INSERT INTO users(name) VALUES ('Alice'), ('Bob');
+
+4- Stopper le conteneur puis redémarrer/lancer un autre conteneur et vérifier les données.
+docker run -d --name mysql_bis -e MYSQL_ROOT_PASSWORD=pass -v mysql_data:/var/lib/mysql mysql:8
+docker exec -it mysql_bis mysql -u root -p
+USE test;
+SELECT * FROM users;
+
+------------------------------------------------
+Réaliser un Dockerfile
+
+------------------------------------------------
+Gestion réseau Docker
+
+docker network list #liste les réseaux docker (3 par défaut : host, bridge et none)
+docker run --network nom_reseau #démarrer en se connectant à se réseau
+
+docker network create #créer un nouveau réseau (par défaut de type bridge)
+docker network connect nom_reseau conteneur #connecter au reseau
+docker network disconnect nom_reseau conteneur #déconnecter du reseau
+
+------------------------------------------------
+Exposition vers l'extérieur
+
+docker run -d -p 8080:80 nginx #exposer sur le port 8080
+
+------------------------------------------------
+Réaliser un Dockerfile (pour ne pas taper à la main)
+
+FROM #Choisir l'image de base
+CMD #Définit la commande à executer au démarrage
+COPY #Copier un fichier
+RUN #Execution
+
+------------------------------------------------
+KUBERNETES
+
+minikube : permet de faire les tests kubernetes sans être les vrais installations/déploiement
+
+minikube start #Démarrer minikube (et installe kubectl)
+minikube stop #Arrêter minikube
+minikube service nom_deploiement --url
+
+kubectl get nodes #Récupérer tout les noeuds
+kubectl create deployment nom --image=nom_image #Création d'un déploiement avec le nom spécifié et l'image souhaité
+kubectl get pods #Récupérer tout les pods
+kubectl scale deployment nom --replicas=<int> #Scale un déploiement en indiquant le nombre de pods souhaité
+kubectl expose deployment nom --type=NodePort --port <int> #Expose le déploiement sur le port spécifié
+kubectl delete service nom_deploiement #Supprimer un service minikube
+kubectl delete deployment nom #Supprimer un déploiement (et tous ses pods)
